@@ -3,3 +3,4 @@ jdk:
 
 install:
   - ./gradlew clean build -x test
+  - ./gradlew --no-daemon build -Dorg.gradle.java.home=$JAVA_HOME
