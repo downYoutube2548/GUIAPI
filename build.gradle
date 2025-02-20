@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish' // Added the maven-publish plugin
 }
 
 group = 'me.downn_falls'
@@ -15,7 +16,6 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
-
     maven {
         url = "https://repo.codemc.io/repository/maven-public/"
     }
@@ -29,19 +29,35 @@ dependencies {
 
 def targetJavaVersion = 17
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
+    // Set source and target compatibility
+    sourceCompatibility = JavaVersion.toVersion(targetJavaVersion)
+    targetCompatibility = JavaVersion.toVersion(targetJavaVersion)
+
+    // Use Java toolchain for specific version
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 
+    // Set the release version for JDK 10 or above
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
+    }
+}
+
+// Publish configuration for JitPack
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = 'JitPack'
+            url = uri("https://jitpack.io")
+        }
     }
 }
 
