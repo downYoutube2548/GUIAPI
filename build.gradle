@@ -3,8 +3,8 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'me.downn_falls'
-version = '1.0'
+group = 'com.github.downYoutube2548'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
@@ -29,6 +29,9 @@ dependencies {
 
 def targetJavaVersion = 17
 java {
+
+    withJavadocJar()
+    withSourcesJar()
     // Set source and target compatibility
     sourceCompatibility = JavaVersion.toVersion(targetJavaVersion)
     targetCompatibility = JavaVersion.toVersion(targetJavaVersion)
